@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin - EasyHome</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="container">
+            <div class="brand">
+                <div class="logo"><img src="./assets/house-cleaning.png" alt="EasyHome Logo" style="height:40px;"></div>
+                <div class="brand-text"><strong>EasyHome</strong></div>
+            </div>
+        </div>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Admin</h2>
+            <h3>Bookings</h3>
+            <table class="table" id="adminTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Service</th>
+                        <th>Customer</th>
+                        <th>Schedule</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+    <footer class="footer container">
+        <div class="kv">© 2025 EasyHome</div>
+    </footer>
+    <script src="app.js"></script>
+    <script>async function load() { const all = await EHAPI.getAllBookingsAdmin(); const tbody = document.querySelector('#adminTable tbody'); tbody.innerHTML = ''; (all || []).forEach(b => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${b.id}</td><td>${b.service}</td><td>${b.name || '—'}</td><td>${b.date} ${b.slot}</td><td>${b.status}</td>`; tbody.appendChild(tr); }); } load();</script>
+</body>
+
+</html>

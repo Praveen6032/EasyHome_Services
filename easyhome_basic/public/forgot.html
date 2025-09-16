@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Forgot Password - EasyHome</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="container">
+            <div class="brand">
+                <div class="logo">EH</div>
+                <div class="brand-text"><strong>EasyHome</strong></div>
+            </div>
+        </div>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Forgot Password</h2>
+            <form id="forgotForm" class="form"><label>Email<input id="email" type="email"></label>
+                <div style="margin-top:12px"><button class="btn" type="submit">Send Reset Token</button></div>
+            </form>
+            <p class="kv">A reset token will be logged to server console in this demo. Use it on <a
+                    href="reset.html">Reset Password</a>.</p>
+        </section>
+    </main>
+    <footer class="footer container">
+        <div class="kv">© 2025 EasyHome</div>
+    </footer>
+    <script src="app.js"></script>
+    <script>document.getElementById('forgotForm').addEventListener('submit', async function (e) { e.preventDefault(); const email = document.getElementById('email').value; const r = await EHAPI.api('/auth/forgot', { method: 'POST', body: JSON.stringify({ email }) }); if (r && r.status === 200) { alert('Reset token sent (server console).'); } else alert('Error'); });</script>
+</body>
+
+</html>

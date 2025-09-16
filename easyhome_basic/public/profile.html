@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Profile - EasyHome</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="container">
+            <div class="brand" onclick="location.href='index.html'">
+                <div class="logo"><img src="./assets/house-cleaning.png" alt="EasyHome Logo" style="height:40px;"></div>
+                <div class="brand-text"><strong>EasyHome</strong></div>
+            </div>
+            <div class="nav-actions"><button class="btn" onclick="location.href='bookings.html'">My
+                    Bookings</button><button class="btn secondary" onclick="EHAPI.logout()">Logout</button></div>
+        </div>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Your profile</h2>
+            <pre id="profileArea" style="white-space:pre-wrap"></pre>
+        </section>
+    </main>
+    <footer class="footer container">
+        <div class="kv">© 2025 EasyHome</div>
+    </footer>
+    <script src="app.js"></script>
+    <script>async function render() { const r = await EHAPI.me(); document.getElementById('profileArea').innerText = JSON.stringify(r.body || { message: 'not logged in' }, null, 2); } render();</script>
+</body>
+
+</html>

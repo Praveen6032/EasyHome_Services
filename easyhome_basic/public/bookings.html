@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>My Bookings - EasyHome</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <div class="brand" onclick="location.href='index.html'">
+        <div class="logo"><img src="./assets/house-cleaning.png" alt="EasyHome Logo" style="height:40px;"></div>
+        <div class="brand-text"><strong>EasyHome</strong></div>
+      </div>
+      <div class="nav-actions">
+        <button class="btn" onclick="location.href='services.html'">Back</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>My Bookings</h2>
+      <div id="bookingsList"></div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <div class="kv">© 2025 EasyHome</div>
+  </footer>
+
+  <script>
+    async function fetchBookings() {
+      try {
+        const res = await fetch('http://localhost:3000/api/bookings');
+        const bookings = await res.json();
+        const list = document.getElementById('bookingsList');
+        list.innerHTML = '';
+
+        if (!bookings || bookings.length === 0) {
+          list.innerHTML = '<div class="kv">No bookings yet</div>';
+          return;
+        }
+
+        const params = new URLSearchParams(location.search);
+        const newBookingId = params.get('newBooking');
+
+        // Display latest bookings first
+        bookings.slice().reverse().forEach(b => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.marginTop = '8px';
+
+          if(b.id === newBookingId){
+            card.style.border = '2px solid #007bff';
+            card.style.backgroundColor = '#e6f0ff';
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+
+          card.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <strong>${b.service}</strong>
+                <div class="kv">${b.date} • ${b.slot}</div>
+              </div>
+              <div style="text-align:right">
+                <div class="kv">₹${b.price || '—'}</div>
+                <div class="kv" style="text-transform:capitalize">${b.status}</div>
+              </div>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      } catch(err){
+        console.error(err);
+        document.getElementById('bookingsList').innerHTML = '<div class="kv">Failed to load bookings.</div>';
+      }
+    }
+
+    fetchBookings();
+  </script>
+</body>
+</html>

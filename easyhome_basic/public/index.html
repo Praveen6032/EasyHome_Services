@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="./assets/house-cleaning.png">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EasyHome — Home</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container">
+      <div class="brand" onclick="location.href='index.html'">
+        <div class="logo"><img src="./assets/house-cleaning.png" alt="EasyHome Logo" style="height:40px;"></div>
+        <div class="brand-text"><strong>EasyHome</strong>
+          <div class="kv">services near you</div>
+        </div>
+      </div>
+      <div class="nav-actions"><input id="loc" class="input"
+          placeholder="Enter city, area or landmark — e.g. Bengaluru"><input id="svc" class="input"
+          placeholder="Service e.g. AC Repair"><button class="btn" id="findBtn">Find</button><button class="btn"
+          onclick="location.href='login.html'">Login</button></div>
+    </div>
+  </header>
+  <main class="container">
+    <section class="hero card">
+      <div class="hero-left">
+        <h1>Home services at your doorstep</h1>
+        <p class="kv">Trusted professionals, transparent pricing and secure payments.</p>
+        <div style="display:flex;gap:24px;margin-top:12px">
+          <div>
+            <h2>⭐ 4.8</h2>
+            <div class="kv">Service Rating*</div>
+          </div>
+          <div>
+            <h2>12M+</h2>
+            <div class="kv">Customers Globally*</div>
+          </div>
+        </div>
+        
+        <div id="featured" class="services-grid"></div>
+      </div>
+      <div class="hero-right"><img src="https://5.imimg.com/data5/SELLER/Default/2025/4/500535252/MY/BP/KW/93343487/home-cleaning-service.jpeg" alt="hero"></div>
+    </section>
+    <section class="card">
+  <h2>Most booked services</h2>
+  <div id="most-booked-grid" class="services-grid"></div>
+</section>
+
+<script>
+// Your services array (from server)
+const services = [
+  {id:'salon',title:'Salon for Women',min_price:199,img:'https://img.freepik.com/free-photo/blonde-girl-getting-her-hair-done_23-2148108826.jpg?semt=ais_incoming&w=740&q=80'},
+  {id:'spa',title:'Spa for Women',min_price:299,img:'https://plus.unsplash.com/premium_photo-1683134297492-cce5fc6dae31?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3BhfGVufDB8fDB8fHww'},
+  {id:'massage',title:'Massage for Men',min_price:399,img:'https://img.freepik.com/free-photo/closeup-man-getting-head-massage-relaxing-with-eyes-closed-spa_637285-1721.jpg?semt=ais_incoming&w=740&q=80'},
+  {id:'ac',title:'AC Repair',min_price:499,img:'https://www.shutterstock.com/image-photo/experienced-technician-inspecting-air-conditioning-600nw-2485364991.jpg'},
+  {id:'clean',title:'Kitchen Cleaning',min_price:399,img:'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template,q_auto:low,f_auto/w_128,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1757512720453-11701e.jpeg'},
+  {id:'painting',title:'Walls & Rooms Painting',min_price:599,img:'https://images.stockcake.com/public/e/6/3/e6355801-b4f1-41db-b73c-e3ec401c4884_large/room-painting-progress-stockcake.jpg'}
+];
+
+// Function to display most booked services
+function loadMostBooked() {
+  const container = document.getElementById('most-booked-grid');
+  container.innerHTML = '';
+
+  // You can choose top 5 manually or sort dynamically later
+  const topServices = services.slice(0, 5); 
+
+  topServices.forEach(service => {
+    const card = document.createElement('div');
+    card.className = 'card service-card';
+    card.innerHTML = `
+      <img src="${service.img}" alt="${service.title}">
+      <h3>${service.title}</h3>
+      <div class="card-actions">
+        <button class="btn" onclick="bookService('${service.title}')">Book Now</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Redirect to booking page
+function bookService(serviceName) {
+  location.href = 'booking.html?service=' + encodeURIComponent(serviceName);
+}
+
+// Load on page ready
+loadMostBooked();
+</script>
+
+  </main>
+ <footer class="footer container" style="text-align:center; padding:2rem 0;">
+  <p>EasyHome provides professional home services including cleaning, repairs, maintenance, and personal care services at your doorstep.</p>
+  <div class="kv">© 2025 EasyHome</div>
+</footer>
+
+  <script src="app.js"></script>
+  <script>
+    (async function () {
+      const sv = await EHAPI.fetchServices();
+      const featured = document.getElementById('featured'), grid = document.getElementById('services-grid');
+      sv.slice(0, 6).forEach(s => { const d = document.createElement('div'); d.className = 'card service-card'; d.innerHTML = `<img src="${s.img}"><h3 style="padding:12px">${s.title}</h3>`; featured.appendChild(d); });
+      sv.forEach(s => { const d = document.createElement('div'); d.className = 'card service-card'; d.innerHTML = `<img src="${s.img}"><h3 style="padding:12px">${s.title}</h3><div class="card-actions"><button class="btn" onclick="location.href='booking.html?service=${encodeURIComponent(s.title)}'">Book Now</button></div>`; grid.appendChild(d); });
+      document.getElementById('findBtn').addEventListener('click', () => { const loc = document.getElementById('loc').value, q = document.getElementById('svc').value; location.href = 'services.html?loc=' + encodeURIComponent(loc) + '&q=' + encodeURIComponent(q); });
+    })()
+  </script>
+</body>
+
+</html>

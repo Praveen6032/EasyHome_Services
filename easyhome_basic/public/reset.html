@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Reset Password - EasyHome</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="container">
+            <div class="brand">
+                <div class="logo"><img src="./assets/house-cleaning.png" alt="EasyHome Logo" style="height:40px;"></div>
+                <div class="brand-text"><strong>EasyHome</strong></div>
+            </div>
+        </div>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2>Reset Password</h2>
+            <form id="resetForm" class="form"><label>Token<input id="token"></label><label>New password<input
+                        id="newPassword" type="password"></label>
+                <div style="margin-top:12px"><button class="btn" type="submit">Reset Password</button></div>
+            </form>
+            <p class="kv">Enter the token logged to server console when you requested reset.</p>
+        </section>
+    </main>
+    <footer class="footer container">
+        <div class="kv">© 2025 EasyHome</div>
+    </footer>
+    <script src="app.js"></script>
+    <script>document.getElementById('resetForm').addEventListener('submit', async function (e) { e.preventDefault(); const token = document.getElementById('token').value; const newPassword = document.getElementById('newPassword').value; const r = await EHAPI.api('/auth/reset', { method: 'POST', body: JSON.stringify({ token, newPassword }) }); if (r && r.status === 200) { alert('Password reset. You can now login.'); location.href = 'login.html'; } else alert('Reset failed'); });</script>
+</body>
+
+</html>

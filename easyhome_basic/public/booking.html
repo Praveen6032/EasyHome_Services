@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Booking - EasyHome</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <div class="brand" onclick="location.href='index.html'">
+        <div class="logo"><img src="./assets/house-cleaning.png" alt="EasyHome Logo" style="height:40px;"></div>
+        <div class="brand-text"><strong>EasyHome</strong></div>
+      </div>
+      <div class="nav-actions">
+        <button class="btn" onclick="location.href='services.html'">Back</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 id="title">Book Service</h2>
+      <form id="bookingForm" class="form">
+        <label>Full name<input id="name" required></label>
+        <label>Phone<input id="phone" required></label>
+        <label>Address<input id="address" required></label>
+        <div style="display:flex;gap:8px">
+          <label>Date<input id="date" type="date" required></label>
+          <label>Slot
+            <select id="slot">
+              <option>09:00 - 11:00</option>
+              <option>11:00 - 13:00</option>
+              <option>14:00 - 16:00</option>
+              <option>16:00 - 18:00</option>
+            </select>
+          </label>
+        </div>
+        <div style="margin-top:12px">
+          <label style="display:block;margin-bottom:8px">Payment method
+            <select id="paymentMethod">
+              <option value="none">Pay on Service</option>
+              <option value="stripe">Stripe (test)</option>
+              <option value="razorpay">Razorpay (test)</option>
+            </select>
+          </label>
+          <button type="submit" class="btn">Confirm & Pay</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <div class="kv">© 2025 EasyHome</div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const service = params.get('service') || '';
+    document.getElementById('title').textContent = service ? ('Book: ' + service) : 'Book Service';
+
+    document.getElementById('bookingForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+
+      const payload = {
+        service,
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        date: document.getElementById('date').value,
+        slot: document.getElementById('slot').value
+      };
+
+      try {
+        const res = await fetch('http://localhost:3000/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if(res.ok){
+          alert('Booking created successfully!');
+          // Redirect with new booking id
+          location.href = 'bookings.html?newBooking=' + data.bookingId;
+        } else {
+          alert('Failed to create booking: ' + (data.message || 'demo fallback'));
+          location.href = 'bookings.html';
+        }
+      } catch(err){
+        console.error(err);
+        alert('Failed to create booking: server unreachable');
+        location.href = 'bookings.html';
+      }
+    });
+  </script>
+</body>
+</html>
